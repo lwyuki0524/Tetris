@@ -75,7 +75,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   isMobile() {
-    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    return window.innerWidth <= 768 || /android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(ua);
   }
 
   createMobileControls() {
@@ -166,12 +167,12 @@ export default class GameScene extends Phaser.Scene {
     this.mobileButtons.push(downBtn);
 
     // 暫停
-    const pauseBtn = this.add.rectangle(60, 50, 80, 50, 0x888888, alpha)
+    this.pauseBtnBg = this.add.rectangle(60, 50, 100, 50, 0x888888, alpha)
       .setInteractive()
       .setScrollFactor(0);
-    this.add.text(60, 50, '暫停', { fontSize: '28px', color: '#fff' }).setOrigin(0.5).setScrollFactor(0);
-    pauseBtn.on('pointerdown', () => this.togglePause());
-    this.mobileButtons.push(pauseBtn);
+    this.pauseBtnText = this.add.text(60, 50, '暫停', { fontSize: '24px', color: '#fff' }).setOrigin(0.5).setScrollFactor(0);
+    this.pauseBtnBg.on('pointerdown', () => this.togglePause());
+    this.mobileButtons.push(this.pauseBtnBg);
   }
 
   showStartScreen() {
@@ -254,18 +255,22 @@ export default class GameScene extends Phaser.Scene {
   }
 
   togglePause() {
-  this.isPaused = !this.isPaused;
-  if (this.isPaused) {
-    this.pauseText = this.add.text(512, 384, 'PAUSED', {
-      fontSize: '48px',
-      fill: '#888',
-      fontFamily: 'Arial Black'
-    }).setOrigin(0.5);
-  } else if (this.pauseText) {
-    this.pauseText.destroy();
-    this.pauseText = null;
+    this.isPaused = !this.isPaused;
+    if (this.isPaused) {
+      this.pauseText = this.add.text(512, 384, 'PAUSED', {
+        fontSize: '48px',
+        fill: '#888',
+        fontFamily: 'Arial Black'
+      }).setOrigin(0.5);
+      if (this.pauseBtnText) this.pauseBtnText.setText('取消暫停');
+    } else {
+      if (this.pauseText) {
+        this.pauseText.destroy();
+        this.pauseText = null;
+      }
+      if (this.pauseBtnText) this.pauseBtnText.setText('暫停');
+    }
   }
-}
 
   handleInput() {
     const leftPressed = this.cursors.left.isDown || this.wasd.A.isDown;
