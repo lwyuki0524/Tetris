@@ -34,7 +34,7 @@ export default class GameScene extends Phaser.Scene {
     if (this.boardFrame) this.boardFrame.destroy();
     this.boardFrame = this.add.graphics();
     this.boardFrame.lineStyle(2, 0x8A4FFF, 1); // 紫色外框
-    this.boardFrame.strokeRect(boardX-15, boardY-2, boardWidth+5, boardHeight);
+    this.boardFrame.strokeRect(boardX-10, boardY, boardWidth+5, boardHeight-10);
     // ↑ 多加2像素讓外框包住邊緣
 
     // Setup input
@@ -58,7 +58,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.leftKeyRepeatTimer = 0;
     this.rightKeyRepeatTimer = 0;
-    this.keyRepeatDelay = 50; // 毫秒
+    this.keyRepeatDelay = 70; // 毫秒
     
     // Show start screen
     this.showStartScreen();
@@ -116,7 +116,7 @@ export default class GameScene extends Phaser.Scene {
     this.handleInput();
 
     // 左鍵連發
-    if (this.leftKey.isDown) {
+    if (this.leftKey.isDown && !Phaser.Input.Keyboard.JustDown(this.leftKey)) {
       if (this.leftKeyRepeatTimer <= 0) {
         this.tetrisLogic.movePieceLeft();
         this.leftKeyRepeatTimer = this.keyRepeatDelay;
@@ -128,7 +128,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     // 右鍵連發
-    if (this.rightKey.isDown) {
+    if (this.rightKey.isDown && !Phaser.Input.Keyboard.JustDown(this.rightKey)) {
       if (this.rightKeyRepeatTimer <= 0) {
         this.tetrisLogic.movePieceRight();
         this.rightKeyRepeatTimer = this.keyRepeatDelay;
