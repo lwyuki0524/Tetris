@@ -46,6 +46,12 @@ export default class GameScene extends Phaser.Scene {
     this.gameOver = false;
     this.startElements = [];
 
+    // 手機專用虛擬按鈕
+    this.mobileButtons = [];
+    if (this.isMobile()) {
+      this.createMobileControls();
+    }
+
     // 暫停狀態
     this.isPaused = false;
 
@@ -66,6 +72,106 @@ export default class GameScene extends Phaser.Scene {
     // Setup update timer
     this.dropTimer = 0;
     this.dropSpeed = 500; // milliseconds
+  }
+
+  isMobile() {
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  }
+
+  createMobileControls() {
+    // 透明度
+    const alpha = 0.7;
+    // 左
+    const leftBtn = this.add.rectangle(120, 650, 80, 80, 0x8A4FFF, alpha)
+      .setInteractive()
+      .setScrollFactor(0);
+    this.add.text(120, 650, '←', { fontSize: '48px', color: '#fff' }).setOrigin(0.5).setScrollFactor(0);
+    
+    // 長按自動移動
+    let leftInterval = null;
+    leftBtn.on('pointerdown', () => {
+      if (this.isPaused) return; // 暫停時不動作
+      this.tetrisLogic.movePieceLeft();
+      leftInterval = setInterval(() => {
+        if (!this.isPaused) this.tetrisLogic.movePieceLeft();
+      }, 100);
+    });
+    leftBtn.on('pointerup', () => {
+      clearInterval(leftInterval);
+      leftInterval = null;
+    });
+    leftBtn.on('pointerout', () => {
+      clearInterval(leftInterval);
+      leftInterval = null;
+    });
+    this.mobileButtons.push(leftBtn);
+
+    // 右
+    const rightBtn = this.add.rectangle(280, 650, 80, 80, 0x8A4FFF, alpha)
+      .setInteractive()
+      .setScrollFactor(0);
+    this.add.text(280, 650, '→', { fontSize: '48px', color: '#fff' }).setOrigin(0.5).setScrollFactor(0);
+    // 長按自動移動
+    let rightInterval = null;
+    rightBtn.on('pointerdown', () => {
+      if (this.isPaused) return; // 暫停時不動作
+      this.tetrisLogic.movePieceRight();
+      rightInterval = setInterval(() => {
+        if (!this.isPaused) this.tetrisLogic.movePieceRight();
+      }, 100);
+    });
+    rightBtn.on('pointerup', () => {
+      clearInterval(rightInterval);
+      rightInterval = null;
+    });
+    rightBtn.on('pointerout', () => {
+      clearInterval(rightInterval);
+      rightInterval = null;
+    });
+    this.mobileButtons.push(rightBtn);
+
+    // 旋轉
+    const rotateBtn = this.add.rectangle(800, 650, 80, 80, 0x4ECDC4, alpha)
+      .setInteractive()
+      .setScrollFactor(0);
+    this.add.text(800, 650, '⟳', { fontSize: '48px', color: '#fff' }).setOrigin(0.5).setScrollFactor(0);
+    rotateBtn.on('pointerdown', () => {
+      if (this.isPaused) return; // 暫停時不動作
+      this.tetrisLogic.rotatePiece()
+    });
+    this.mobileButtons.push(rotateBtn);
+
+    // 下落
+    const downBtn = this.add.rectangle(940, 650, 80, 80, 0xFF6B6B, alpha)
+      .setInteractive()
+      .setScrollFactor(0);
+    this.add.text(940, 650, '↓', { fontSize: '48px', color: '#fff' }).setOrigin(0.5).setScrollFactor(0);
+    // 長按自動下落
+    let downInterval = null;
+    downBtn.on('pointerdown', () => {
+      if (this.isPaused) return; // 暫停時不動作
+      this.tetrisLogic.movePieceDown();
+      downInterval = setInterval(() => {
+        if (!this.isPaused) this.tetrisLogic.movePieceDown();
+      }, 100);
+    });
+    downBtn.on('pointerup', () => {
+      clearInterval(downInterval);
+      downInterval = null;
+    });
+    downBtn.on('pointerout', () => {
+      clearInterval(downInterval);
+      downInterval = null;
+    });
+    this.mobileButtons.push(downBtn);
+
+    // 暫停
+    const pauseBtn = this.add.rectangle(60, 50, 80, 50, 0x888888, alpha)
+      .setInteractive()
+      .setScrollFactor(0);
+    this.add.text(60, 50, '暫停', { fontSize: '28px', color: '#fff' }).setOrigin(0.5).setScrollFactor(0);
+    pauseBtn.on('pointerdown', () => this.togglePause());
+    this.mobileButtons.push(pauseBtn);
   }
 
   showStartScreen() {
