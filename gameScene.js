@@ -117,7 +117,7 @@ export default class GameScene extends Phaser.Scene {
 
   isMobile() {
     const ua = navigator.userAgent || navigator.vendor || window.opera;
-    return window.innerWidth <= 768 || window.innerHeight > window.innerWidth || /android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(ua);
+    return window.innerWidth <= 768 || window.innerHeight <= 1000 || window.innerWidth <= window.innerHeight || /android|iphone|ipad|ipod|blackberry|iemobile|surface|opera mini|mobile/i.test(ua);
   }
 
   createMobileControls() {

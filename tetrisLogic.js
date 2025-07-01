@@ -1,11 +1,17 @@
 export default class TetrisLogic {
   constructor(scene) {
     this.scene = scene;
-    this.BOARD_WIDTH = 10;
-    this.BOARD_HEIGHT = 25;
-    this.TILE_SIZE = 25;
-    this.BOARD_X = 350;
-    this.BOARD_Y = 100;
+    this.BOARD_WIDTH = 10;   // 棋盤寬度（格數），標準俄羅斯方塊為10格寬
+    this.BOARD_HEIGHT = 20;  // 棋盤高度（格數），標準俄羅斯方塊為20格高
+    const screenHeight = window.innerHeight;
+    const screenWidth = window.innerWidth;
+    // 讓面板高度最多佔螢幕 70%，寬度最多佔 60%，並取較小值
+    const maxTileHeight = Math.floor((screenHeight * 0.7) / 20);
+    const maxTileWidth = Math.floor((screenWidth * 0.6) / 10);
+    this.TILE_SIZE = Math.min(maxTileHeight, maxTileWidth, 60); // 60為最大單格像素，可依需求調整
+    // this.TILE_SIZE = 25;     // 每個方塊的像素大小（寬高），用於顯示
+    this.BOARD_X = Math.floor((screenWidth - this.BOARD_WIDTH * this.TILE_SIZE) / 2);
+    this.BOARD_Y = Math.floor((screenHeight - this.BOARD_HEIGHT * this.TILE_SIZE) / 2);
     
     // Tetris pieces
     this.pieces = {
