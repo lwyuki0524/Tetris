@@ -39,6 +39,10 @@
    ```
    python -m http.server 8000
    ```
+   或
+   ```
+   python -m http.server 8000 --bind 0.0.0.0
+   ```
 3. 用瀏覽器開啟 `http://localhost:8000`。
 
 ---

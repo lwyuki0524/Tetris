@@ -89,6 +89,7 @@ export default class TetrisLogic {
       this.currentPiece.x++;
       return;
     }
+    this.scene.sounds.move?.play();
     this.updateCurrentPieceDisplay();
   }
 
@@ -118,6 +119,7 @@ export default class TetrisLogic {
       this.currentPiece.rotation = oldRotation;
       return;
     }
+    this.scene.sounds.rotate?.play();
     this.updateCurrentPieceDisplay();
   }
 
@@ -157,7 +159,7 @@ export default class TetrisLogic {
         }
       }
     }
-    
+    this.scene.sounds.drop?.play();
     this.clearCurrentPieceSprites();
     this.checkLines();
     this.spawnNewPiece();
@@ -174,6 +176,7 @@ export default class TetrisLogic {
     }
     
     if (linesCleared > 0) {
+      this.scene.sounds.clear?.play();
       this.lines += linesCleared;
       this.score += linesCleared * 100 * this.level;
       this.level = Math.floor(this.lines / 10) + 1;
