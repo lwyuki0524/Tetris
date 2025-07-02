@@ -67,6 +67,7 @@ export default class GameScene extends Phaser.Scene {
     
     // 初始化音效
     this.sounds = {
+      bgm: this.sound.add('bgm', { loop: true, volume: 0.5 }),
       move: this.sound.add('move'),
       rotate: this.sound.add('rotate'),
       drop: this.sound.add('drop'),
@@ -76,8 +77,7 @@ export default class GameScene extends Phaser.Scene {
 
     
     // 加入背景音樂並循環播放
-    this.bgm = this.sound.add('bgm', { loop: true, volume: 0.5 });
-    this.bgm.play();
+    this.sounds.bgm.play();
     
     // 先清除舊的外框（避免重複）
     this.boardFrame?.destroy();
@@ -271,12 +271,16 @@ export default class GameScene extends Phaser.Scene {
         fontFamily: 'Arial Black'
       }).setOrigin(0.5);
       if (this.pauseBtnText) this.pauseBtnText.setText('取消暫停');
+      // 暫停音樂
+      if (this.sounds.bgm && this.sounds.bgm.isPlaying) this.sounds.bgm.pause();
     } else {
       if (this.pauseText) {
         this.pauseText.destroy();
         this.pauseText = null;
       }
       if (this.pauseBtnText) this.pauseBtnText.setText('暫停');
+      // 恢復音樂
+      if (this.sounds.bgm && this.sounds.bgm.isPaused) this.sounds.bgm.resume();
     }
   }
 
